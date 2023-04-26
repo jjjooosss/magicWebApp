@@ -1,11 +1,19 @@
 package magic.board;
 
 public class BoardBean {
+	private String b_id;
 	private String b_name;
 	private String b_email;
 	private String b_title;
 	private String b_content;
 	
+	
+	public String getB_id() {
+		return b_id;
+	}
+	public void setB_id(String b_id) {
+		this.b_id = b_id;
+	}
 	public String getB_name() {
 		return b_name;
 	}

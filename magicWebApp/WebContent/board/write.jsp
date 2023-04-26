@@ -6,10 +6,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script type="text/javascript" src="board.js" charset="utf-8"></script>
 <body>
 	<center>
 		<h1>글 올 리 기</h1>
-		<form method="post" action="write_ok.jsp">
+		<form name="reg_frm" method="post" action="write_ok.jsp">
 			<table>
 				<tr height="50"> 
 					<td width="80">작성자</td> 
@@ -39,7 +40,7 @@
 				</tr>
 				<tr height="50" align="center"> 
 					<td colspan="4">
-						<input type="submit" value="글쓰기">&nbsp;
+						<input type="button" value="글쓰기" onclick="check_ok()">&nbsp;
 						<input type="reset" value="다시작성">
 					</td>
 				</tr>
