@@ -47,15 +47,16 @@ public class BoardDBBean {
 //			}
 			
 			
-			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content)"
+			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date)"
 //					+ " VALUES(?,?,?,?,?)";
-					+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?)";
+					+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 //			pstmt.setInt(1, num);
 			pstmt.setString(1, board.getB_name());
 			pstmt.setString(2, board.getB_email());
 			pstmt.setString(3, board.getB_title());
 			pstmt.setString(4, board.getB_content());
+			pstmt.setString(5, board.getB_date());
 			re = pstmt.executeUpdate();
 //			re=1;
 			
@@ -83,7 +84,7 @@ public class BoardDBBean {
 		ArrayList<BoardBean> list = new ArrayList<BoardBean>();
 		
 		try {
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content"
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date"
 					+ " FROM BOARDT ORDER BY B_ID DESC";
 			
 			conn= getConnection();
@@ -102,6 +103,7 @@ public class BoardDBBean {
 				board.setB_email(rs.getString("b_email"));
 				board.setB_title(rs.getString("b_title"));
 				board.setB_content(rs.getString("b_content"));
+				board.setB_date(rs.getString("b_date"));
 				//여기까지가 1행을 가져와서 저장
 				
 //				행의 데이터를 ArrayList에 저장
@@ -120,7 +122,7 @@ public class BoardDBBean {
 		Connection conn=null;
 		PreparedStatement pstmt =null;
 		ResultSet rs = null;
-		String sql ="SELECT b_id, b_name, b_email, b_title, b_content"
+		String sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date"
 				+ " FROM BOARDT WHERE b_id=?";
 		BoardBean board = null;
 		try {
@@ -138,6 +140,7 @@ public class BoardDBBean {
 				board.setB_email(rs.getString("b_email"));
 				board.setB_title(rs.getString("b_title"));
 				board.setB_content(rs.getString("b_content"));
+				board.setB_date(rs.getString("b_date"));
 			}
 			pstmt.close();
 			conn.close();

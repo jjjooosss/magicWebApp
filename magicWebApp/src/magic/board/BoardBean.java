@@ -6,8 +6,14 @@ public class BoardBean {
 	private String b_email;
 	private String b_title;
 	private String b_content;
+	private String b_date;
 	
-	
+	public String getB_date() {
+		return b_date;
+	}
+	public void setB_date(String b_date) {
+		this.b_date = b_date;
+	}
 	public int getB_id() {
 		return b_id;
 	}

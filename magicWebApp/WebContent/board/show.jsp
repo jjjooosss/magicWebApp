@@ -29,6 +29,8 @@
 			<tr height="30" align="center">
 				<td width="100">작성자</td>
 				<td width="200" align="center"><%=board.getB_name()%></td>
+				<td width="100">작성일</td>
+				<td width="200" align="center"><%=board.getB_date()%></td>
 			</tr>
 			<tr height="30" align="center">
 				<td width="100">글제목</td>

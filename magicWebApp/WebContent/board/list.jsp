@@ -9,7 +9,7 @@
 	// 호출된 메소드의 데이터 타입으로 받아주면 됨
 	ArrayList<BoardBean> boardList = db.listBoard();
 	int b_id = 0;
-	String b_name = "", b_email = "", b_title = "", b_content = "";
+	String b_name = "", b_email = "", b_title = "", b_content = "", b_date= "";
 %>
 <html>
 <head>
@@ -32,6 +32,7 @@
 				<td width="40">번호</td>
 				<td width="450">글제목</td>
 				<td width="120">작성자</td>
+				<td width="120">작성일</td>
 			</tr>
 			<%
 				//boardList에 있는 오라클 데이터를 가져옴
@@ -44,6 +45,7 @@
 				b_email = board.getB_email();
 				b_title = board.getB_title();
 				b_content = board.getB_content();
+				b_date = board.getB_date();
 			%>
 			<tr height="50" align="center" bgcolor="#f7f7f7"
 				onmouseover="this.style.background='#eeeeef'"
@@ -56,6 +58,7 @@
 				</td>
 				<td align="center"><a href="mailto:<%=b_email %>"> <%=b_name%>
 				</a></td>
+				<td align="center"><%=b_date%></td>
 			</tr>
 			<%
 				}
