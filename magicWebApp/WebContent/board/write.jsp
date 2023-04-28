@@ -42,6 +42,7 @@
 					<td colspan="4">
 						<input type="button" value="글쓰기" onclick="check_ok()">&nbsp;
 						<input type="reset" value="다시작성">
+						<input type="button" value="글목록" onclick="javascript:window.location='list.jsp'">
 					</td>
 				</tr>
 			</table>

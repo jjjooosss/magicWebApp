@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 public class copyDBBean {
 	//이 클래스의 인스턴스를 오직 하나만 생성하고, 여러곳에서 참조할 수 있게 함
@@ -19,6 +20,9 @@ public class copyDBBean {
 	
 	public Connection getConnection() throws Exception{
 		Context ctx = new InitialContext();
-		data
+		DataSource ds =(DataSource)ctx.lookup("java:comp/env/jdbc/oracle");
+		return ds.getConnection();
 	}
+	
+	
 }

@@ -12,13 +12,15 @@
 	if(re==1){
 		%>
 		alert("글이 정상적으로 등록 되었습니다.");
-		location.href="write.jsp";
+// 		location.href="list.jsp";
 		<%
+		response.sendRedirect("list.jsp");
 	}else{
 		%>
 		alert("글이 등록되지 않았습니다. 다시 작성해주세요.");
-		history.back();
+// 		history.back();
 		<%
+		response.sendRedirect("write.jsp");
 	}
 %>
 </script>
