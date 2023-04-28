@@ -3,6 +3,7 @@ package magic.board;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.naming.Context;
@@ -73,7 +74,8 @@ public class BoardDBBean {
 	public ArrayList<BoardBean> listBoard() {
 		
 		Connection conn=null;
-		PreparedStatement pstmt =null;
+//		PreparedStatement pstmt =null;
+		Statement stmt =null;
 		ResultSet rs = null;
 		
 		String sql ="";
@@ -81,23 +83,31 @@ public class BoardDBBean {
 		ArrayList<BoardBean> list = new ArrayList<BoardBean>();
 		
 		try {
-			sql ="SELECT b_id, b_name, b_title FROM BOARDT ORDER BY B_ID DESC";
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content"
+					+ " FROM BOARDT ORDER BY B_ID DESC";
 			
 			conn= getConnection();
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
+//			pstmt = conn.prepareStatement(sql);
+			stmt = conn.createStatement();
+//			rs = pstmt.executeQuery();
+			rs = stmt.executeQuery(sql);
 			
 			
 			while (rs.next()) {
 				BoardBean board = new BoardBean();
+				
+//				쿼리 결과를 BoardBean 객체에 담아서 ArratList 에 저장
 				board.setB_id(rs.getInt("b_id"));
 				board.setB_name(rs.getString("b_name"));
-//				board.setB_email(rs.getString("b_email"));
+				board.setB_email(rs.getString("b_email"));
 				board.setB_title(rs.getString("b_title"));
-//				board.setB_content(rs.getString("b_content"));
+				board.setB_content(rs.getString("b_content"));
+				//여기까지가 1행을 가져와서 저장
+				
+//				행의 데이터를 ArrayList에 저장
 				list.add(board);
 			}
-			pstmt.close();
+			stmt.close();
 			conn.close();
 			rs.close();
 		} catch (Exception e) {
@@ -105,5 +115,36 @@ public class BoardDBBean {
 		}
 		return list;
 	}
-	
+	public BoardBean getBoard(int num) {
+		
+		Connection conn=null;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		String sql ="SELECT b_id, b_name, b_email, b_title, b_content"
+				+ " FROM BOARDT WHERE b_id=?";
+		BoardBean board = null;
+		try {
+			conn= getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			
+			
+			while (rs.next()) {
+				board = new BoardBean();
+				
+				board.setB_id(rs.getInt("b_id"));
+				board.setB_name(rs.getString("b_name"));
+				board.setB_email(rs.getString("b_email"));
+				board.setB_title(rs.getString("b_title"));
+				board.setB_content(rs.getString("b_content"));
+			}
+			pstmt.close();
+			conn.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return board;
+	}
 }
