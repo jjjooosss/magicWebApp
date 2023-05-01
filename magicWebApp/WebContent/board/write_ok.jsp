@@ -1,3 +1,4 @@
+<%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
@@ -9,17 +10,15 @@
  %>
 <jsp:useBean class="magic.board.BoardBean" id="boardBean"></jsp:useBean>
 <jsp:setProperty property="*" name="boardBean"/>
-<%
-	Calendar date = Calendar.getInstance();
-	Date today = date.getTime();
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	String todayStr = sdf.format(today);
-	boardBean.setB_date(todayStr);
-%>
-<script type="text/javascript">
+<script>
 <%
 	request.setCharacterEncoding("utf-8");
 	BoardDBBean manager = BoardDBBean.getInstance();
+	
+	//오늘 날짜 추가 // 위의 setProperty에서 보드빈 객체에 세팅 할때 날짜도 같이 세팅 해주는 것
+	boardBean.setB_date(new Timestamp(System.currentTimeMillis()));
+	
+	
 	int re= manager.insertBoard(boardBean);
 	if(re==1){
 		%>

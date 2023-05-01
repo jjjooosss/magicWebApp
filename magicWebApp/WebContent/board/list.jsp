@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.sql.Timestamp"%>
 <%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@page import="magic.board.BoardBean"%>
 <%@page import="java.util.ArrayList"%>
@@ -8,8 +10,10 @@
 	BoardDBBean db = BoardDBBean.getInstance();
 	// 호출된 메소드의 데이터 타입으로 받아주면 됨
 	ArrayList<BoardBean> boardList = db.listBoard();
-	int b_id = 0;
-	String b_name = "", b_email = "", b_title = "", b_content = "", b_date= "";
+	int b_id = 0, b_hit=0;
+	String b_name, b_email, b_title, b_content;
+	Timestamp b_date;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
 <html>
 <head>
@@ -33,6 +37,7 @@
 				<td width="450">글제목</td>
 				<td width="120">작성자</td>
 				<td width="120">작성일</td>
+				<td width="120">조회수</td>
 			</tr>
 			<%
 				//boardList에 있는 오라클 데이터를 가져옴
@@ -46,19 +51,26 @@
 				b_title = board.getB_title();
 				b_content = board.getB_content();
 				b_date = board.getB_date();
+				b_hit = board.getB_hit();
 			%>
 			<tr height="50" align="center" bgcolor="#f7f7f7"
 				onmouseover="this.style.background='#eeeeef'"
 				onmouseout="this.style.background='#f7f7f7'">
 				<td align="center"><%=b_id%></td>
 				<td>
-					<!-- 					글 번호를 가지고 글내용 보기 페이지로 이동 --> <a
-					href="show.jsp?b_id=<%=b_id%>"> <%=b_title%>
+					<!-- 					글 번호를 가지고 글내용 보기 페이지로 이동 --> 
+					<a href="show.jsp?b_id=<%=b_id%>"> <%=b_title%>
 				</a>
 				</td>
 				<td align="center"><a href="mailto:<%=b_email %>"> <%=b_name%>
-				</a></td>
-				<td align="center"><%=b_date%></td>
+				</a>
+				</td>
+				<td align="center">
+				<%=sdf.format(b_date)%>
+				</td>
+				<td align="center">
+				<%=b_hit%>
+				</td>
 			</tr>
 			<%
 				}

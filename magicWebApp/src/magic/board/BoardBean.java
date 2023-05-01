@@ -1,17 +1,35 @@
 package magic.board;
 
+import java.sql.Timestamp;
+
 public class BoardBean {
 	private int b_id;
 	private String b_name;
 	private String b_email;
 	private String b_title;
 	private String b_content;
-	private String b_date;
+	private Timestamp b_date;
+	private int b_hit;
+	private String b_pwd;
 	
-	public String getB_date() {
+	
+	
+	public String getB_pwd() {
+		return b_pwd;
+	}
+	public void setB_pwd(String b_pwd) {
+		this.b_pwd = b_pwd;
+	}
+	public int getB_hit() {
+		return b_hit;
+	}
+	public void setB_hit(int b_hit) {
+		this.b_hit = b_hit;
+	}
+	public Timestamp getB_date() {
 		return b_date;
 	}
-	public void setB_date(String b_date) {
+	public void setB_date(Timestamp b_date) {
 		this.b_date = b_date;
 	}
 	public int getB_id() {

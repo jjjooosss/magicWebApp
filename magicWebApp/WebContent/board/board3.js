@@ -17,5 +17,20 @@ function check_ok() {
 	   reg_frm.b_content.focus();
 	   return;
 	}
+	if(reg_frm.b_pwd.value==""){
+	   alert("비밀번호는 반드시 입력해야 합니다.");
+	   reg_frm.b_pwd.focus();
+	   return;
+	}
 	document.reg_frm.submit();
+}
+function delete_ok() {
+	
+	if(ppp.b_pwd.value==""){
+	   alert("비밀번호는 반드시 입력해야 합니다.");
+	   ppp.b_pwd.focus();
+	   return;
+	}
+	document.ppp.submit();
+	
 }

@@ -29,7 +29,7 @@ public class BoardDBBean {
 	public int insertBoard(BoardBean board) {
 		Connection conn=null;
 		PreparedStatement pstmt =null;
-		ResultSet rs = null;
+//		ResultSet rs = null;
 		String sql = "";
 		int re=-1;//초기값 -1, insert 정상적으로 실행되면 1
 		int num;
@@ -47,22 +47,24 @@ public class BoardDBBean {
 //			}
 			
 			
-			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date)"
+			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd)"
 //					+ " VALUES(?,?,?,?,?)";
-					+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?)";
+					+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 //			pstmt.setInt(1, num);
 			pstmt.setString(1, board.getB_name());
 			pstmt.setString(2, board.getB_email());
 			pstmt.setString(3, board.getB_title());
 			pstmt.setString(4, board.getB_content());
-			pstmt.setString(5, board.getB_date());
+			pstmt.setTimestamp(5, board.getB_date());
+			pstmt.setInt(6, 0);
+			pstmt.setString(7, board.getB_pwd());
 			re = pstmt.executeUpdate();
 //			re=1;
 			
+//			rs.close();
 			pstmt.close();
 			conn.close();
-			rs.close();
 			
 			System.out.println("추가 성공");
 		} catch (Exception e) {
@@ -84,7 +86,7 @@ public class BoardDBBean {
 		ArrayList<BoardBean> list = new ArrayList<BoardBean>();
 		
 		try {
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date"
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd"
 					+ " FROM BOARDT ORDER BY B_ID DESC";
 			
 			conn= getConnection();
@@ -103,7 +105,9 @@ public class BoardDBBean {
 				board.setB_email(rs.getString("b_email"));
 				board.setB_title(rs.getString("b_title"));
 				board.setB_content(rs.getString("b_content"));
-				board.setB_date(rs.getString("b_date"));
+				board.setB_date(rs.getTimestamp("b_date"));
+				board.setB_hit(rs.getInt(7));
+				board.setB_pwd(rs.getString(8));
 				//여기까지가 1행을 가져와서 저장
 				
 //				행의 데이터를 ArrayList에 저장
@@ -118,19 +122,29 @@ public class BoardDBBean {
 		return list;
 	}
 	public BoardBean getBoard(int num) {
-		
+
 		Connection conn=null;
 		PreparedStatement pstmt =null;
 		ResultSet rs = null;
-		String sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date"
-				+ " FROM BOARDT WHERE b_id=?";
+		
+		String sql ="";
 		BoardBean board = null;
+		
+		
 		try {
 			conn= getConnection();
+//			조회수 1 증가 sql
+			sql = "update boardt set B_hit =(b_hit+1) where b_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			pstmt.executeUpdate();
+			
+//			글 내용 보기
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd"
+					+ " FROM BOARDT WHERE b_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
-			
 			
 			while (rs.next()) {
 				board = new BoardBean();
@@ -140,7 +154,9 @@ public class BoardDBBean {
 				board.setB_email(rs.getString("b_email"));
 				board.setB_title(rs.getString("b_title"));
 				board.setB_content(rs.getString("b_content"));
-				board.setB_date(rs.getString("b_date"));
+				board.setB_date(rs.getTimestamp("b_date"));
+				board.setB_hit(rs.getInt("b_hit"));
+				board.setB_pwd(rs.getString("b_pwd"));
 			}
 			pstmt.close();
 			conn.close();
@@ -150,4 +166,44 @@ public class BoardDBBean {
 		}
 		return board;
 	}
+	public int deleteBoard(int num, String pwd) {
+		
+		Connection conn=null;
+		PreparedStatement pstmt =null;
+		ResultSet rs= null;
+		
+		int re=-1;
+		
+		String sql ="";
+		String b_pwd ="";
+		
+		try {
+			
+			conn= getConnection();
+			sql = "select b_pwd from boardt where b_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				b_pwd = rs.getString("b_pwd");
+				if (pwd.equals(b_pwd)) {
+					sql= "delete from boardt where b_id=?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1, num);
+					pstmt.executeUpdate();
+					re=1;
+				} else {
+					re = 0;//비번 불일치
+				}
+			}
+//			pstmt.close();
+//			conn.close();
+//			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return re;
+	}
+
 }

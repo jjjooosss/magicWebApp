@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<script type="text/javascript" src="board.js" charset="utf-8"></script>
+<script type="text/javascript" src="board3.js" charset="utf-8"></script>
 <body>
 	<center>
 		<h1>글 올 리 기</h1>
@@ -18,8 +18,6 @@
 <!-- 						maxlength : 화면단에서 데이터베이스 오류를 미리 방지 -->
 						<input type="text" name="b_name" size="10" maxlength="20">
 					</td>
-				</tr>
-				<tr height="50"> 
 					<td width="80">이메일</td> 
 					<td width="140">
 <!-- 						maxlength : 화면단에서 데이터베이스 오류를 미리 방지 -->
@@ -36,6 +34,13 @@
 				<tr height="50"> 
 					<td colspan="4">
 						<textarea rows="10" cols="65" name="b_content"></textarea>
+					</td>
+				</tr>
+				<tr height="30"> 
+					<td width="80">암&nbsp;&nbsp;호</td> 
+					<td colspan="3" width="460">
+<!-- 						maxlength => 컬럼사이즈와 같음 -->
+						<input type="password" name="b_pwd" size="12" maxlength="12">
 					</td>
 				</tr>
 				<tr height="50" align="center"> 
