@@ -11,7 +11,7 @@
 	// 호출된 메소드의 데이터 타입으로 받아주면 됨
 	ArrayList<BoardBean> boardList = db.listBoard();
 	int b_id = 0, b_hit=0;
-	String b_name, b_email, b_title, b_content;
+	String b_name, b_email, b_title, b_content, b_ip;
 	Timestamp b_date;
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
@@ -38,6 +38,7 @@
 				<td width="120">작성자</td>
 				<td width="120">작성일</td>
 				<td width="120">조회수</td>
+				<td width="120">ip</td>
 			</tr>
 			<%
 				//boardList에 있는 오라클 데이터를 가져옴
@@ -52,6 +53,7 @@
 				b_content = board.getB_content();
 				b_date = board.getB_date();
 				b_hit = board.getB_hit();
+				b_ip = board.getB_ip();
 			%>
 			<tr height="50" align="center" bgcolor="#f7f7f7"
 				onmouseover="this.style.background='#eeeeef'"
@@ -70,6 +72,9 @@
 				</td>
 				<td align="center">
 				<%=b_hit%>
+				</td>
+				<td align="center">
+				<%=b_ip%>
 				</td>
 			</tr>
 			<%

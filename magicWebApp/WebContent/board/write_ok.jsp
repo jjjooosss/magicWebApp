@@ -1,3 +1,4 @@
+<%@page import="sun.net.util.IPAddressUtil"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Calendar"%>
@@ -17,6 +18,8 @@
 	
 	//오늘 날짜 추가 // 위의 setProperty에서 보드빈 객체에 세팅 할때 날짜도 같이 세팅 해주는 것
 	boardBean.setB_date(new Timestamp(System.currentTimeMillis()));
+	boardBean.setB_ip(request.getRemoteAddr());
+	
 	
 	
 	int re= manager.insertBoard(boardBean);

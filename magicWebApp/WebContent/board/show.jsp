@@ -11,7 +11,7 @@
 	int num = Integer.parseInt(request.getParameter("b_id"));
 	BoardDBBean db = BoardDBBean.getInstance();
 // 	board 객체에 게시글의 정보가 저장되어 있음
-	BoardBean board = db.getBoard(num);
+	BoardBean board = db.getBoard(num, true); //조회수 증가로 true 추가
 %>
 <html>
 <head>
@@ -39,15 +39,17 @@
 			</tr>
 			<tr height="30" align="center">
 				<td width="100">글제목</td>
-				<td width="200" align="left"><%= board.getB_title()%></td>
+				<td colspan="3" width="200" align="left"><%= board.getB_title()%></td>
 			</tr>
 			<tr height="30" align="center">
 				<td width="100">글내용</td>
-				<td width="200" align="left"><%=board.getB_content()%></td>
+				<td colspan="3" width="200" align="left"><%=board.getB_content()%></td>
 			</tr>
 			<tr height="30" align="center">
 				<td colspan="4" align="right">
-				<input type="submit" value="글삭제">
+				<input type="button" value="글수정" onclick="location.href='edit.jsp?b_id=<%= board.getB_id() %>'">&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" value="글삭제" onclick="location.href='delete.jsp?b_id=<%= board.getB_id() %>'">&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" value="글목록" onclick="location.href='list.jsp'">
 				</td>
 			</tr>
 
