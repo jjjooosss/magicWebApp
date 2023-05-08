@@ -10,7 +10,7 @@
 	BoardDBBean db = BoardDBBean.getInstance();
 	// 호출된 메소드의 데이터 타입으로 받아주면 됨
 	ArrayList<BoardBean> boardList = db.listBoard();
-	int b_id = 0, b_hit=0;
+	int b_id = 0, b_hit=0, b_level =0;
 	String b_name, b_email, b_title, b_content, b_ip;
 	Timestamp b_date;
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -54,14 +54,30 @@
 				b_date = board.getB_date();
 				b_hit = board.getB_hit();
 				b_ip = board.getB_ip();
+				b_level = board.getB_level();
 			%>
 			<tr height="50" align="center" bgcolor="#f7f7f7"
 				onmouseover="this.style.background='#eeeeef'"
 				onmouseout="this.style.background='#f7f7f7'">
 				<td align="center"><%=b_id%></td>
 				<td>
+					<%
+// 						b_level 기준으로 화살표 이미지를 들여쓰기로 출력
+						if(b_level > 0){//답변글
+							for(int j=0; j< b_level; j++){//for 기준으로 들여쓰기를 얼마만큼 할 것인지를 정함
+								%>
+									&nbsp;
+								<%
+								}
+// 							들여쓰기가 적용된 시점=> 이미지 추가!
+							%>
+								<img src="./images/AnswerLine.gif" width="16" height="16">
+							<%
+							}
+					%>
 					<!-- 					글 번호를 가지고 글내용 보기 페이지로 이동 --> 
-					<a href="show.jsp?b_id=<%=b_id%>"> <%=b_title%>
+					<a href="show.jsp?b_id=<%=b_id%>"> 
+					<%=b_title%>
 				</a>
 				</td>
 				<td align="center"><a href="mailto:<%=b_email %>"> <%=b_name%>

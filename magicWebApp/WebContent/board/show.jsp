@@ -12,6 +12,7 @@
 	BoardDBBean db = BoardDBBean.getInstance();
 // 	board 객체에 게시글의 정보가 저장되어 있음
 	BoardBean board = db.getBoard(num, true); //조회수 증가로 true 추가
+
 %>
 <html>
 <head>
@@ -49,6 +50,7 @@
 				<td colspan="4" align="right">
 				<input type="button" value="글수정" onclick="location.href='edit.jsp?b_id=<%= board.getB_id() %>'">&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" value="글삭제" onclick="location.href='delete.jsp?b_id=<%= board.getB_id() %>'">&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" value="답변글" onclick="location.href='write.jsp?b_id=<%= board.getB_id() %>'">&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" value="글목록" onclick="location.href='list.jsp'">
 				</td>
 			</tr>

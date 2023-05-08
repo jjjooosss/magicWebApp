@@ -29,46 +29,76 @@ public class BoardDBBean {
 	public int insertBoard(BoardBean board) {
 		Connection conn=null;
 		PreparedStatement pstmt =null;
-//		ResultSet rs = null;
+		ResultSet rs = null;
 		String sql = "";
 		int re=-1;//초기값 -1, insert 정상적으로 실행되면 1
 		int num;
+		int id= board.getB_id();
+		int ref= board.getB_ref();
+		int step= board.getB_step();
+		int level= board.getB_level();
 		try {
 			conn = getConnection();
 //			글번호 최대값+1 을 구함 : null일때 1 아니면 +1
-//			String selectSql = "SELECT MAX(b_id) FROM boardt";
-//			pstmt = conn.prepareStatement(selectSql);
-//			rs = pstmt.executeQuery();
-//			
-//			if (rs.next()) {
-//				num = rs.getInt(1) + 1;
-//			}else {
-//				num =1;
-//			}
+			String selectSql = "SELECT MAX(b_id) FROM boardt";
+			pstmt = conn.prepareStatement(selectSql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				num = rs.getInt(1) + 1;
+			}else {
+				num =1;
+			}
 			
 			
-			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip)"
-//					+ " VALUES(?,?,?,?,?)";
-					+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?,?,?,?)";
-			pstmt = conn.prepareStatement(sql);
-//			pstmt.setInt(1, num);
-			pstmt.setString(1, board.getB_name());
-			pstmt.setString(2, board.getB_email());
-			pstmt.setString(3, board.getB_title());
-			pstmt.setString(4, board.getB_content());
-			pstmt.setTimestamp(5, board.getB_date());
-			pstmt.setInt(6, 0);
-			pstmt.setString(7, board.getB_pwd());
-			pstmt.setString(8, board.getB_ip());
-			re = pstmt.executeUpdate();
-//			re=1;
+			//1.글 번호를 가지고 오는 경우(답변)
+			//2.글 번호를 가지고 오지 않는 경우(신규글)
 			
-//			rs.close();
-			pstmt.close();
-			conn.close();
 			
-			System.out.println("추가 성공");
-		} catch (Exception e) {
+			if (id != 0) {//글 번호를 가지고 오는 경우(답변)
+				//특정 조건에 step +1 로 업데이트
+				sql="";
+				step = step+1;
+				level = level+1;
+				
+				sql = "UPDATE BOARDT SET B_STEP = B_STEP + 1 WHERE B_REF = ? AND B_STEP > ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, ref);
+				pstmt.setInt(2, step);
+				pstmt.executeUpdate();
+				
+			 
+			}else {//글 번호를 가지고 오지 않는 경우(신규글)
+				ref = num;
+				step =0;
+				level =0;
+			}
+				
+			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level)"
+//						+ " VALUES(?,?,?,?,?)";
+						+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?,?,?,?"
+						+ ",?,?,?)";
+				
+				pstmt = conn.prepareStatement(sql);
+//				pstmt.setInt(1, num);
+				pstmt.setString(1, board.getB_name());
+				pstmt.setString(2, board.getB_email());
+				pstmt.setString(3, board.getB_title());
+				pstmt.setString(4, board.getB_content());
+				pstmt.setTimestamp(5, board.getB_date());
+				pstmt.setInt(6, 0);
+				pstmt.setString(7, board.getB_pwd());
+				pstmt.setString(8, board.getB_ip());
+				pstmt.setInt(9, ref);
+				pstmt.setInt(10, step);
+				pstmt.setInt(11, level);
+				re = pstmt.executeUpdate();
+				
+				pstmt.close();
+				conn.close();
+			
+				System.out.println("추가 성공");
+			} catch (Exception e) {
 			System.out.println("추가 실패");
 			e.printStackTrace();
 		}
@@ -87,8 +117,9 @@ public class BoardDBBean {
 		ArrayList<BoardBean> list = new ArrayList<BoardBean>();
 		
 		try {
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip"
-					+ " FROM BOARDT ORDER BY B_ID DESC";
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level"
+//					FROM BOARDT ORDER BY B_REF, B_STEP => 최신글 순이고, 답글 순
+					+ " FROM BOARDT ORDER BY B_REF, B_STEP";
 			
 			conn= getConnection();
 //			pstmt = conn.prepareStatement(sql);
@@ -110,6 +141,9 @@ public class BoardDBBean {
 				board.setB_hit(rs.getInt(7));
 				board.setB_pwd(rs.getString(8));
 				board.setB_ip(rs.getString(9));
+				board.setB_ref(rs.getInt(10));
+				board.setB_step(rs.getInt(11));
+				board.setB_level(rs.getInt(12));
 				//여기까지가 1행을 가져와서 저장
 				
 //				행의 데이터를 ArrayList에 저장
@@ -147,13 +181,13 @@ public class BoardDBBean {
 			}
 			
 //			글 내용 보기
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip"
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level"
 					+ " FROM BOARDT WHERE b_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
 			
-			while (rs.next()) {
+			if (rs.next()) {
 				board = new BoardBean();
 				
 				board.setB_id(rs.getInt("b_id"));
@@ -165,6 +199,9 @@ public class BoardDBBean {
 				board.setB_hit(rs.getInt("b_hit"));
 				board.setB_pwd(rs.getString("b_pwd"));
 				board.setB_ip(rs.getString("b_ip"));
+				board.setB_ref(rs.getInt(10));
+				board.setB_step(rs.getInt(11));
+				board.setB_level(rs.getInt(12));
 			}
 			pstmt.close();
 			conn.close();
