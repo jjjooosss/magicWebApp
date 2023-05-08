@@ -71,7 +71,7 @@
 								}
 // 							들여쓰기가 적용된 시점=> 이미지 추가!
 							%>
-								<img src="./images/AnswerLine.gif" width="16" height="16">
+								<img src="/magicWebApp/images/AnswerLine.gif" width="16" height="16">
 							<%
 							}
 					%>
