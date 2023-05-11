@@ -3,6 +3,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+
+	//넘어오는 페이지 번호를 변수에 저장
+	String pageNum = request.getParameter("pageNum");
+
 // 	request.getParameter("b_id") : show.jsp에서 받는다
 	int b_id = Integer.parseInt(request.getParameter("b_id"));	
 
@@ -21,7 +25,7 @@
 	<center>
 		<h1>글 수 정 하 기</h1>
 <!-- 		edit_ok.jsp 로 show.jsp에서 받은 글 번호를 넘긴다 -->
-		<form name="reg_frm" method="post" action="edit_ok.jsp?b_id=<%= b_id %>">
+		<form name="reg_frm" method="post" action="edit_ok.jsp?b_id=<%= b_id %>&pageNum=<%= pageNum %>">
 			<table>
 				<tr height="50"> 
 					<td width="80">작성자</td> 
@@ -60,7 +64,7 @@
 					<td colspan="4">
 						<input type="button" value="글수정" onclick="check_ok()">&nbsp;
 						<input type="reset" value="다시작성">
-						<input type="button" value="글목록" onclick="javascript:window.location='list.jsp'">
+						<input type="button" value="글목록" onclick="javascript:window.location='list.jsp?pageNum=<%= pageNum %>'">
 					</td>
 				</tr>
 			</table>

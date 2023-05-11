@@ -7,6 +7,11 @@
     request.setCharacterEncoding("utf-8");
  %>
 <%	
+
+	//넘어오는 페이지 번호를 변수에 저장
+	String pageNum = request.getParameter("pageNum");
+
+
 // 	b_id , b_pwd 를 edit.jsp에서 받는다
 // 	int b_id = Integer.parseInt(request.getParameter("b_id"));
 // 	String b_pwd = request.getParameter("b_pwd");
@@ -16,7 +21,7 @@
 	int re= db.editBoard(board);
 	
 	if(re==1){
-		response.sendRedirect("list.jsp");
+		response.sendRedirect("list.jsp?pageNum="+pageNum);
 	}else if(re == 0){
 		%>
 		<script>

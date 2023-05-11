@@ -8,6 +8,10 @@
 <jsp:setProperty property="*" name="boardBean"/>
 
 <%	
+
+	//넘어오는 페이지 번호를 변수에 저장
+	String pageNum = request.getParameter("pageNum");
+
 	
 	int num = Integer.parseInt(request.getParameter("b_id"));
 	String pwd = request.getParameter("b_pwd");
@@ -19,7 +23,7 @@
 		%>
 		<script>
 		alert("글이 정상적으로 삭제 되었습니다.");
-		location.href="list.jsp";
+		location.href="list.jsp?pageNum="+pageNum;
 		</script>
 		<%
 	}else if(re == 0){

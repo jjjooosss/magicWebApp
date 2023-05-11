@@ -7,9 +7,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+// 	넘어오는 페이지 번호를 변수에 저장
+	String pageNum = request.getParameter("pageNum");
+
+// 	넘어오는 페이지 번호가 없으면 1페이지
+	if(pageNum == null){
+		pageNum = "1";
+	}
+// 	if(pageNum.equals("null")){
+// 		pageNum = "1";
+// 	}
+	
 	BoardDBBean db = BoardDBBean.getInstance();
 	// 호출된 메소드의 데이터 타입으로 받아주면 됨
-	ArrayList<BoardBean> boardList = db.listBoard();
+// 	ArrayList<BoardBean> boardList = db.listBoard();
+	ArrayList<BoardBean> boardList = db.listBoard(pageNum);
+	
 	int b_id = 0, b_hit=0, b_level =0;
 	String b_name, b_email, b_title, b_content, b_ip;
 	Timestamp b_date;
@@ -26,7 +39,10 @@
 		<h1>게시판에 등록된 글 목록 보기</h1>
 		<table width="600">
 			<tr>
-				<td align="right"><a href="write.jsp">글쓰기</a></td>
+				<td align="right">
+<!-- 				<a href="write.jsp">글쓰기</a> -->
+				<a href="write.jsp?pageNum=<%= pageNum %>">글쓰기</a>
+				</td>
 			</tr>
 		</table>
 	</center>
@@ -75,8 +91,10 @@
 							<%
 							}
 					%>
-					<!-- 					글 번호를 가지고 글내용 보기 페이지로 이동 --> 
-					<a href="show.jsp?b_id=<%=b_id%>"> 
+					<!-- 	글 번호를 가지고 글내용 보기 페이지로 이동 --> 
+<%-- 					<a href="show.jsp?b_id=<%=b_id%>">  --%>
+<!-- 						& => 쿼리스트링 연결 -->
+					<a href="show.jsp?b_id=<%=b_id%>&pageNum=<%= pageNum %>"> 
 					<%=b_title%>
 				</a>
 				</td>
@@ -98,6 +116,8 @@
 			%>
 
 		</table>
+<!-- 		페이지 표시 4개 -->
+		<%= BoardBean.pageNumber(4) %>
 	</center>
 </body>
 </html>

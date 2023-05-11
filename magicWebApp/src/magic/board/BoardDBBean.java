@@ -105,29 +105,91 @@ public class BoardDBBean {
 		return re;
 	}
 	
-	public ArrayList<BoardBean> listBoard() {
+//	public ArrayList<BoardBean> listBoard() {
+	public ArrayList<BoardBean> listBoard(String pageNumber) {
 		
 		Connection conn=null;
-//		PreparedStatement pstmt =null;
 		Statement stmt =null;
 		ResultSet rs = null;
 		
-		String sql ="";
+		ResultSet pageSet = null;//페이지 관련 결과값 저장할 변수
+		int dbCount =0; //게시글 총 갯수 
+		int absolutePage=1;
+//		String sql ="";
 		
 		ArrayList<BoardBean> list = new ArrayList<BoardBean>();
 		
 		try {
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level"
+			String sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level"
 //					FROM BOARDT ORDER BY B_REF, B_STEP => 최신글 순이고, 답글 순
-					+ " FROM BOARDT ORDER BY B_REF, B_STEP";
-			
+//					+ " FROM BOARDT ORDER BY B_REF, B_STEP";
+//					+ " FROM BOARDT ORDER BY B_DATE DESC, B_REF DESC, B_STEP ASC";
+					+ " FROM BOARDT ORDER BY B_REF DESC, B_STEP ASC";
+			String sql2 = "SELECT count(b_id) FROM boardT";
 			conn= getConnection();
-//			pstmt = conn.prepareStatement(sql);
-			stmt = conn.createStatement();
-//			rs = pstmt.executeQuery();
+//			stmt = conn.createStatement();
+//			페이지 처리를 위한 메소드 파라미터 추가
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//			rs = stmt.executeQuery(sql);
+			pageSet = stmt.executeQuery(sql2);
+			
+			if (pageSet.next()) {//게시글 총 갯수 존재 여부
+				dbCount = pageSet.getInt(1);//게시글 총 갯수
+				pageSet.close();//자원 반납
+			}
+			
+			//ex) 84건인경우(84%10 = 4)
+			//ex) 80건인경우(80%10 = 0) => 8페이지 = 80/10
+			if (dbCount % BoardBean.pageSize == 0) { 
+				BoardBean.pageCount = dbCount / BoardBean.pageSize;
+			} else {//ex) 84건인 경우(9페이지 = 84/10 +1)
+				BoardBean.pageCount = dbCount / BoardBean.pageSize + 1;
+			}
+			
+			if (pageNumber != null) {//넘겨오는 페이지 번호가 있는 경우
+				BoardBean.pageNum = Integer.parseInt(pageNumber);
+//				ex)1: 0*10+1=1, 2: 1*10+1 = 11 => 1페이지는 1, 2페이지는 11 
+				absolutePage = (BoardBean.pageNum -1) * BoardBean.pageSize +1;
+			}
+			
 			rs = stmt.executeQuery(sql);
 			
-			
+			if (rs.next()) {//게시글이 있으면 참
+				rs.absolute(absolutePage); //페이지의 기준 게시글 셋팅
+				int count =0;
+				
+				while (count < BoardBean.pageSize) {//게시글 갯수만큼 반복
+					BoardBean board = new BoardBean();
+					
+//					쿼리 결과를 BoardBean 객체에 담아서 ArratList 에 저장
+					board.setB_id(rs.getInt("b_id"));
+					board.setB_name(rs.getString("b_name"));
+					board.setB_email(rs.getString("b_email"));
+					board.setB_title(rs.getString("b_title"));
+					board.setB_content(rs.getString("b_content"));
+					board.setB_date(rs.getTimestamp("b_date"));
+					board.setB_hit(rs.getInt(7));
+					board.setB_pwd(rs.getString(8));
+					board.setB_ip(rs.getString(9));
+					board.setB_ref(rs.getInt(10));
+					board.setB_step(rs.getInt(11));
+					board.setB_level(rs.getInt(12));
+					//여기까지가 1행을 가져와서 저장
+					
+//					행의 데이터를 ArrayList에 저장
+					list.add(board);
+					
+					//페이지 변경시 처리위한 로직
+					if (rs.isLast()) {
+						break;
+					} else {
+						rs.next();
+					}
+					
+					count++;
+				}
+			}
+			/*
 			while (rs.next()) {
 				BoardBean board = new BoardBean();
 				
@@ -149,6 +211,7 @@ public class BoardDBBean {
 //				행의 데이터를 ArrayList에 저장
 				list.add(board);
 			}
+			*/
 			stmt.close();
 			conn.close();
 			rs.close();
