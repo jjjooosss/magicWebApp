@@ -61,7 +61,12 @@
 				%>
 				--%>
 				<%
-					out.print("<p>첨부파일"+"<a href='FileDownload.jsp?fileN="+num+"'>"+board.getB_rfname()+"</a>"+"</p>");
+					if(board.getB_rfname() != null){
+						%>
+						<img src="../images/zip.gif">
+						<%
+					}
+					out.print("<p>첨부파일 : "+"<a href='FileDownload.jsp?fileN="+num+"'>"+board.getB_rfname()+"</a>"+"</p>");
 				%>
 				</td>
 			</tr>
