@@ -23,7 +23,7 @@
 // 	ArrayList<BoardBean> boardList = db.listBoard();
 	ArrayList<BoardBean> boardList = db.listBoard(pageNum);
 	
-	int b_id = 0, b_hit=0, b_level =0;
+	int b_id = 0, b_hit=0, b_level =0, b_fsize=0;
 	String b_name, b_email, b_title, b_content, b_ip;
 	Timestamp b_date;
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -50,6 +50,7 @@
 		<table cellspacing="0" border="1" width="800">
 			<tr height="25" align="center">
 				<td width="40">번호</td>
+				<td width="80">첨부파일</td>
 				<td width="450">글제목</td>
 				<td width="120">작성자</td>
 				<td width="120">작성일</td>
@@ -71,11 +72,23 @@
 				b_hit = board.getB_hit();
 				b_ip = board.getB_ip();
 				b_level = board.getB_level();
+				b_fsize = board.getB_fsize();
+				
 			%>
 			<tr height="50" align="center" bgcolor="#f7f7f7"
 				onmouseover="this.style.background='#eeeeef'"
 				onmouseout="this.style.background='#f7f7f7'">
 				<td align="center"><%=b_id%></td>
+				<td> 
+					<%
+						if(b_fsize > 0){
+							%>
+<!-- 								<img src="./images/zip.gif"> -->
+								<img src="../images/zip.gif">
+							<%
+						}
+					%>
+				</td>
 				<td>
 					<%
 // 						b_level 기준으로 화살표 이미지를 들여쓰기로 출력

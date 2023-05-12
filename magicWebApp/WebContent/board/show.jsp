@@ -43,6 +43,25 @@
 				<td width="200" align="center"><%=sdf.format(board.getB_date())%></td>
 			</tr>
 			<tr height="30" align="center">
+				<td width="110">파&nbsp;&nbsp;일</td>
+				<td colspan="3">
+				&nbsp;
+				<%
+					if(board.getB_fname() != null){
+				%>
+<!-- 					<img src="./images/zip.gif"> -->
+					<img src="../images/zip.gif">
+<%-- 					<a href="./upload/<%= board.getB_fname() %>"> --%>
+<%-- 					<a href="./upload/<%= board.getB_fname() %>"> --%>
+					<a href="../upload/<%= board.getB_fname() %>">
+						원본 파일 : <%= board.getB_fname() %>
+					</a>
+				<%
+					}
+				%>
+				</td>
+			</tr>
+			<tr height="30" align="center">
 				<td width="100">글제목</td>
 				<td colspan="3" width="200" align="left"><%= board.getB_title()%></td>
 			</tr>

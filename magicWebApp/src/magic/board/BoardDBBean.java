@@ -74,10 +74,13 @@ public class BoardDBBean {
 				level =0;
 			}
 				
-			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level)"
+			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content"
+//					+ ", b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level)"
+					+ ", b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level, b_fname, b_fsize)"
 //						+ " VALUES(?,?,?,?,?)";
 						+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?,?,?,?"
-						+ ",?,?,?)";
+//						+ ",?,?,?)";
+						+ ",?,?,?,?,?)";
 				
 				pstmt = conn.prepareStatement(sql);
 //				pstmt.setInt(1, num);
@@ -92,6 +95,8 @@ public class BoardDBBean {
 				pstmt.setInt(9, ref);
 				pstmt.setInt(10, step);
 				pstmt.setInt(11, level);
+				pstmt.setString(12, board.getB_fname());
+				pstmt.setInt(13, board.getB_fsize());
 				re = pstmt.executeUpdate();
 				
 				pstmt.close();
@@ -101,6 +106,14 @@ public class BoardDBBean {
 			} catch (Exception e) {
 			System.out.println("추가 실패");
 			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return re;
 	}
@@ -124,7 +137,9 @@ public class BoardDBBean {
 //					FROM BOARDT ORDER BY B_REF, B_STEP => 최신글 순이고, 답글 순
 //					+ " FROM BOARDT ORDER BY B_REF, B_STEP";
 //					+ " FROM BOARDT ORDER BY B_DATE DESC, B_REF DESC, B_STEP ASC";
-					+ " FROM BOARDT ORDER BY B_REF DESC, B_STEP ASC";
+//					+ " FROM BOARDT ORDER BY B_REF DESC, B_STEP ASC";
+					+ ", b_fname, b_fsize FROM BOARDT"
+					+ " ORDER BY B_REF DESC, B_STEP ASC";
 			String sql2 = "SELECT count(b_id) FROM boardT";
 			conn= getConnection();
 //			stmt = conn.createStatement();
@@ -174,6 +189,8 @@ public class BoardDBBean {
 					board.setB_ref(rs.getInt(10));
 					board.setB_step(rs.getInt(11));
 					board.setB_level(rs.getInt(12));
+					board.setB_fname(rs.getString(13));
+					board.setB_fsize(rs.getInt(14));
 					//여기까지가 1행을 가져와서 저장
 					
 //					행의 데이터를 ArrayList에 저장
@@ -217,6 +234,13 @@ public class BoardDBBean {
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return list;
 	}
@@ -244,8 +268,10 @@ public class BoardDBBean {
 			}
 			
 //			글 내용 보기
-			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level"
-					+ " FROM BOARDT WHERE b_id=?";
+			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd"
+//					+ ", b_ip, b_ref, b_step, b_level"
+					+ ", b_ip, b_ref, b_step, b_level, b_fname, b_fsize "
+					+ "FROM BOARDT WHERE b_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
@@ -265,12 +291,22 @@ public class BoardDBBean {
 				board.setB_ref(rs.getInt(10));
 				board.setB_step(rs.getInt(11));
 				board.setB_level(rs.getInt(12));
+				board.setB_fname(rs.getString(13));
+				board.setB_fsize(rs.getInt(14));
 			}
 			pstmt.close();
 			conn.close();
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return board;
 	}
@@ -310,6 +346,14 @@ public class BoardDBBean {
 //			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return re;
 	}
@@ -355,6 +399,14 @@ public class BoardDBBean {
 //			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return re;
 	}

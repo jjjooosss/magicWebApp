@@ -21,7 +21,36 @@ public class BoardBean {
 	public static int pageCount=1;//페이지 개수 지정 변수
 	public static int pageNum=1;//페이지 번호
 	
-//	리턴 : [이전] + 페이지 번호 + [다음]
+	private String b_fname;//파일 이름
+	private int b_fsize=0;//파일 사이즈
+	
+
+
+	public String getB_fname() {
+		return b_fname;
+	}
+
+
+
+	public void setB_fname(String b_fname) {
+		this.b_fname = b_fname;
+	}
+
+
+
+	public int getB_fsize() {
+		return b_fsize;
+	}
+
+
+
+	public void setB_fsize(int b_fsize) {
+		this.b_fsize = b_fsize;
+	}
+
+
+
+	//	리턴 : [이전] + 페이지 번호 + [다음]
 //	limit : 페이지 화면 출력 갯수(ex> pdf 예문에서는 4개)
 	public static String pageNumber(int limit) {
 		String str = "";

@@ -1,3 +1,5 @@
+<%@page import="java.io.File"%>
+<%@page import="magic.board.BoardBean"%>
 <%@page import="magic.board.BoardDBBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -18,14 +20,24 @@
 
 	BoardDBBean manager = BoardDBBean.getInstance();
 	
+// 	파일 삭제를 위한 처리
+	BoardBean board = manager.getBoard(num, false);
+	String fName = board.getB_fname();
+// 	upload폴더경로
+// 	String up ="D:\\dev\\work_java_josu\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\wtpwebapps\\magicWebApp\\upload";
+	String up ="D:\\dev\\work_java_josu\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\wtpwebapps\\magicWebApp\\upload\\";
+	
 	int re= manager.deleteBoard(num, pwd);
+	
+	//deleteBoard()에서 글 정상 삭제되면 1 리턴, 아니면 0 리턴
+	//글 삭제하면서 파일도 삭제 (좀비파일 없애기 위해)
 	if(re==1){
-		%>
-		<script>
-		alert("글이 정상적으로 삭제 되었습니다.");
-		location.href="list.jsp?pageNum="+pageNum;
-		</script>
-		<%
+		response.sendRedirect("list.jsp?pageNum="+pageNum);
+		if(fName != null){
+			//파일 삭제:java.io.File
+			File file = new File(up + fName);//객체생성(파일경로+파일이름)
+			file.delete();
+		}
 	}else if(re == 0){
 		%>
 		<script>
