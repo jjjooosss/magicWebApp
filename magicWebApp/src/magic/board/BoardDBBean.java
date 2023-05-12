@@ -76,11 +76,11 @@ public class BoardDBBean {
 				
 			sql = "INSERT INTO boardt(b_id, b_name, b_email, b_title, b_content"
 //					+ ", b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level)"
-					+ ", b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level, b_fname, b_fsize)"
+					+ ", b_date, b_hit, b_pwd, b_ip, b_ref, b_step, b_level, b_fname, b_fsize, b_rfname)"
 //						+ " VALUES(?,?,?,?,?)";
 						+ " VALUES((SELECT nvl(max(b_id),0)+1 FROM boardt),?,?,?,?,?,?,?,?"
 //						+ ",?,?,?)";
-						+ ",?,?,?,?,?)";
+						+ ",?,?,?,?,?,?)";
 				
 				pstmt = conn.prepareStatement(sql);
 //				pstmt.setInt(1, num);
@@ -97,6 +97,7 @@ public class BoardDBBean {
 				pstmt.setInt(11, level);
 				pstmt.setString(12, board.getB_fname());
 				pstmt.setInt(13, board.getB_fsize());
+				pstmt.setString(14, board.getB_rfname());
 				re = pstmt.executeUpdate();
 				
 				pstmt.close();
@@ -270,7 +271,7 @@ public class BoardDBBean {
 //			글 내용 보기
 			sql ="SELECT b_id, b_name, b_email, b_title, b_content, b_date, b_hit, b_pwd"
 //					+ ", b_ip, b_ref, b_step, b_level"
-					+ ", b_ip, b_ref, b_step, b_level, b_fname, b_fsize "
+					+ ", b_ip, b_ref, b_step, b_level, b_fname, b_fsize, b_rfname "
 					+ "FROM BOARDT WHERE b_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -293,6 +294,7 @@ public class BoardDBBean {
 				board.setB_level(rs.getInt(12));
 				board.setB_fname(rs.getString(13));
 				board.setB_fsize(rs.getInt(14));
+				board.setB_rfname(rs.getString(15));
 			}
 			pstmt.close();
 			conn.close();
@@ -409,6 +411,40 @@ public class BoardDBBean {
 			}
 		}
 		return re;
+	}
+	
+	public BoardBean getFileName(int bid) {
+		Connection conn=null;
+		PreparedStatement pstmt =null;
+		ResultSet rs= null;
+		String sql ="select b_fname, b_rfname from boardt where b_id = ?";
+		
+		BoardBean board = null;
+		try {
+			conn= getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bid);
+			rs = pstmt.executeQuery();
+			
+//			첨부파일이 있으면
+			if (rs.next()) {
+				board = new BoardBean();
+				board.setB_fname(rs.getString(1));
+				board.setB_rfname(rs.getString(2));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return board;
 	}
 
 }

@@ -46,18 +46,22 @@
 				<td width="110">파&nbsp;&nbsp;일</td>
 				<td colspan="3">
 				&nbsp;
+				<%-- 
 				<%
 					if(board.getB_fname() != null){
 				%>
-<!-- 					<img src="./images/zip.gif"> -->
-					<img src="../images/zip.gif">
-<%-- 					<a href="./upload/<%= board.getB_fname() %>"> --%>
-<%-- 					<a href="./upload/<%= board.getB_fname() %>"> --%>
+<%-- 					<img src="./images/zip.gif"> --%>
+<!-- 					<img src="../images/zip.gif"> -->
+<%-- 					<a href="./upload/<%= board.getB_fname() %>"
 					<a href="../upload/<%= board.getB_fname() %>">
 						원본 파일 : <%= board.getB_fname() %>
 					</a>
 				<%
 					}
+				%>
+				--%>
+				<%
+					out.print("<p>첨부파일"+"<a href='FileDownload.jsp?fileN="+num+"'>"+board.getB_rfname()+"</a>"+"</p>");
 				%>
 				</td>
 			</tr>

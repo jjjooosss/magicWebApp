@@ -23,7 +23,20 @@ public class BoardBean {
 	
 	private String b_fname;//파일 이름
 	private int b_fsize=0;//파일 사이즈
+	private String b_rfname;//실제파일 이름
 	
+	
+
+	public String getB_rfname() {
+		return b_rfname;
+	}
+
+
+
+	public void setB_rfname(String b_rfname) {
+		this.b_rfname = b_rfname;
+	}
+
 
 
 	public String getB_fname() {
